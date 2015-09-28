@@ -49,8 +49,22 @@ function assert(expression, failureMessage) {
  TODO: Then, use a loop to calculate how long it took the blob to finish
  with Dowington.
 */
+function Blob() {}
 
-var hoursSpentInDowington; // TODO: assign me the value of the
+var blob = new Blob();
+
+function eatDowington() {
+  var totalPop = 1000;
+  var rate = 1;
+  for (var i = 1; i < totalPop; i++) {
+    rate = i + 1;
+    totalPop = totalPop - rate;
+  }
+  return i;
+}
+
+var hoursSpentInDowington = eatDowington();
+console.log(hoursSpentInDowington); // TODO: assign me the value of the
                            // above calculation (how long it took
                            // the blob to eat Dowington)
 
@@ -58,10 +72,23 @@ var hoursSpentInDowington; // TODO: assign me the value of the
 // town, and the starting consumption rate, and returns the number
 // of hours the blob needs to ooze its way through that town.
 
-function hoursToOoze(population, peoplePerHour) {
-  // TODO: implement me based on the instructions above.
-  // Be sure to then assign me to the Blob's prototype.
-}
+// function hoursToOoze(population, peoplePerHour) {
+//   // TODO: implement me based on the instructions above.
+//   // Be sure to then assign me to the Blob's prototype.
+// }
+Blob.prototype.hoursToOoze = function hoursToOoze(population, peoplePerHour) {
+  for (var i = 1; i < population; i++) {
+    peoplePerHour = i + 1;
+    population = population - peoplePerHour;
+  }
+  if (population === 0) {
+    return 0;
+  } else {
+    return i;
+  }
+};
+
+console.log(blob.hoursToOoze(1000, 1));
 
 assert(blob.hoursToOoze(0, 1) === 0, 'no people means no time needed.');
 assert(blob.hoursToOoze(1000, 1) === hoursSpentInDowington,
@@ -69,6 +96,9 @@ assert(blob.hoursToOoze(1000, 1) === hoursSpentInDowington,
 
 // TODO: write three more assertions like the two above, testing out
 // the hoursToOoze method.
+assert(blob.hoursToOoze(10, 1) === 4, 'Population equal to 10 w/ rate of 1/hr equals 4 hrs');
+assert(blob.hoursToOoze(50, 1) !== 4, 'Population equal to 50 w/ rate of 1/hr does not equal 4 hrs');
+assert(blob.hoursToOoze(500, 1) >= 4, 'Population equal to 500 w/ rate of 1/hr is greater than or equal to 4 hrs');
 
 //*********************************************************
 // PROBLEM 2: Universal Translator. 20 points
@@ -85,30 +115,49 @@ var hello = {
 // speak, and method (that you'll place on the prototype) called
 // sayHello.
 
-function SentientBeing () {
   // TODO: specify a home planet and a language
   // you'll need to add parameters to this constructor
+function SentientBeing(homePlanet, language) {
+  this.homePlanet = homePlanet;
+  this.language = language;
+  this.greeting = hello[this.language];
 }
 
 // sb is a SentientBeing object
-function sayHello (sb) {
-    // TODO: say hello prints out (console.log's) hello in the
-    // language of the speaker, but returns it in the language
-    // of the listener (the sb parameter above).
-    // use the 'hello' object at the beginning of this exercise
-    // to do the translating
+// function sayHello (sb) {
+//     // TODO: say hello prints out (console.log's) hello in the
+//     // language of the speaker, but returns it in the language
+//     // of the listener (the sb parameter above).
+//     // use the 'hello' object at the beginning of this exercise
+//     // to do the translating
 
-    //TODO: put this on the SentientBeing prototype
-  }
+//     //TODO: put this on the SentientBeing prototype
+//   }
+SentientBeing.prototype.sayHello = function(sb) {
+  console.log(this.greeting);
+  return sb.greeting;
+};
 
 // TODO: create three subclasses of SentientBeing, one for each
 // species above (Klingon, Human, Romulan).
+function Klingon() {}
+Klingon.prototype = new SentientBeing('Qo\'nos', 'klingon');
 
-assert((new Human()).sayHello(new Klingon()) === 'nuqneH',
-  'the klingon should hear nuqneH');
+function Human() {}
+Human.prototype = new SentientBeing('Earth', 'federation standard');
+
+function Romulan() {}
+Romulan.prototype = new SentientBeing('Romulus', 'romulan');
+
+assert((new Human()).sayHello(new Klingon()) === 'nuqneH', 'the klingon should hear nuqneH');
 
 // TODO: write five more assertions, to complete all the possible
 // greetings between the three types of sentient beings you created above.
+assert((new Human()).sayHello(new Romulan()) === 'Jolan\'tru', 'the Romulan should hear Jolan\'tru');
+assert((new Klingon()).sayHello(new Romulan()) === 'Jolan\'tru', 'the Romulan should hear Jolan\'tru');
+assert((new Klingon()).sayHello(new Human()) === 'hello', 'the Human should hear hello');
+assert((new Romulan()).sayHello(new Human()) === 'hello', 'the Human should hear hello');
+assert((new Romulan()).sayHello(new Klingon()) === 'nuqneH', 'the Klingon should hear nuqneH');
 
 //*********************************************************
 // PROBLEM 3: Sorting. 20 points.
@@ -127,24 +176,54 @@ function lastLetterSort(stringArray) {
     // this byLastLetter function is a "compare function"
     // And check out the "comparing strings" section  here:
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+  if (a.charAt(a.length - 1) > b.charAt(b.length - 1)) {
+    return 1;
+  } else {
+    return -1;
   }
-  stringArray.sort(byLastLetter);
 }
+  return stringArray.sort(byLastLetter);
+}
+
+console.log(lastLetterSort(['phone', 'tea', 'pen', 'puppy']));
+console.log(lastLetterSort(['shoes', 'shorts', 'shirt', 'hoodie']));
+
+assert(lastLetterSort(['phone', 'tea', 'pen', 'puppy']).value === ['phone', 'tea', 'pen', 'puppy'].value, 'order last letter');
+assert(lastLetterSort(['shoes', 'shorts', 'shirt', 'hoodie']).value === ['shoes', 'shorts', 'shirt', 'hoodie'].value, 'order last letter');
 
 function sumArray(numberArray) {
   var sum = 0;
   // TODO: implement me using forEach
+  numberArray.forEach(function(number) {
+    sum += number;
+  });
   return sum;
 }
 
+console.log(sumArray([3, 6, 9, 12]));
+console.log(sumArray([31, 16, 3, 24]));
+
+assert(sumArray([3, 6, 9, 12]) === 30, 'the sum of this array is 30');
+assert(sumArray([31, 16, 3, 24]) === 74, 'the sum of this array is 74');
+
 function sumSort(arrayOfArrays) {
-  arrayOfArrays.sort(function(item) {
+  return arrayOfArrays.sort(function(a, b) {
     // TODO: implement me using sumArray
     //  order the arrays based on the sum of the numbers
     //  inside each array
+    if (sumArray(a) > sumArray(b)) {
+      return 1;
+    } else {
+      return -1;
+    }
   });
 }
 
+console.log(sumSort([[3, 6, 9, 12], [31, 16, 3, 24]]));
+console.log(sumSort([[2, 4, 6], [1, 4], [4, 5, 6]]));
+
+assert(sumSort([[3, 6, 9, 12], [31, 16, 3, 24]]).value === [[31, 16, 3, 24], [3, 6, 9, 12]].value, 'sorts arrays based on sum of num inside each array');
+assert(sumSort([[2, 4, 6], [1, 4], [4, 5, 6]]).value === [[1, 4], [2, 4, 6], [4, 5, 6]].value, 'sorts arrays based on sum of num inside each array');
 //*********************************************************
 // PROBLEM 4: Cleanup: 10 points
 // Makes sure this file passes jshint and jscs

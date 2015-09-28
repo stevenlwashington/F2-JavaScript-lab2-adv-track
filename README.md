@@ -16,3 +16,8 @@ comments. Be sure to read everything. Run lab2.js with `node lab2.js`.
 
 
 #### Resources and Collaborators
+Slack for insights and help from other students.
+JavaScript and jQuery by John Duckett
+A Smarter Way to Learn JavaScript by Mark Myers
+Stack Overflow
+my rubber ducky
